@@ -138,7 +138,11 @@ pub trait WorldIndex {
 impl WorldIndex for (usize, usize) {
     fn to_index(&self, world: &World) -> Option<usize> {
         let (x, y) = *self;
-        (y * world.width + x).to_index(world)
+        if x >= world.width() || y >= world.height {
+            None 
+        } else {
+            (y * world.width + x).to_index(world)
+        }
     }
 }
 
