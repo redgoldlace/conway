@@ -130,10 +130,11 @@ impl Component for State {
         }
 
         match self {
-            State::Scale(scale) => scale.update(message).map(Some),
-            State::Draw(draw) => draw.update(message).map(Some),
-            State::Simulate(simulate) => simulate.update(message).map(Some),
+            State::Scale(scale) => scale.update(message),
+            State::Draw(draw) => draw.update(message),
+            State::Simulate(simulate) => simulate.update(message),
         }
+        .map(Some)
     }
 }
 
