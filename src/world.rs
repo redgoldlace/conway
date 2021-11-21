@@ -18,28 +18,7 @@ impl World {
     /// 0 cells.
     pub fn new(width: usize, height: usize) -> Self {
         let size = width * height;
-        let cells = if size == 0 {
-            Default::default()
-        } else {
-            let layout = Layout::array::<Cell>(size).unwrap();
-            // SAFETY: `size_of::<Cell>()` is greater than 0, so this is not undefined behaviour.
-            let ptr = unsafe { std::alloc::alloc(layout) } as *mut Cell;
-
-            for n in 0..size {
-                // SAFETY: We allocated sufficient memory for this operation above. We're writing into a buffer that we
-                // have control over.
-                unsafe {
-                    std::ptr::write(ptr.wrapping_add(n), Cell::Dead);
-                }
-            }
-
-            // SAFETY: We safely initialized this memory above. The buffer is correctly sized and the pointer is not
-            // dangling.
-            unsafe {
-                let slice = std::slice::from_raw_parts_mut(ptr, size);
-                Box::from_raw(slice)
-            }
-        };
+        let cells = vec![Cell::Dead; size].into_boxed_slice();
 
         World {
             width,
